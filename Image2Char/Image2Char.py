@@ -1,6 +1,7 @@
 from PIL import Image
 import argparse
 import string
+from TextToImage import text_image
 
 # Parse Commandline Argument
 parser = argparse.ArgumentParser(description='Convert an image into an new image consist of ASCII chars')
@@ -38,12 +39,14 @@ def get_char(r,g,b,alpha = 256):
     :return: a character representing the original input RGB
     """
     if alpha == 0 or (r == g == b == 255):
-        return ' '
+        return '.'
     length = len(ascii_char)
     gray = int(0.2126 * r + 0.7152 * g + 0.0722 * b)
 
     unit = (256.0 + 1)/length
     return ascii_char[int(gray/unit)]
+
+
 
 def main():
 
@@ -61,12 +64,11 @@ def main():
             result += char
         result += "\n"
 
-    if OUTPUT:
-        with open(OUTPUT, "w") as f:
-            f.write(result)
-    else:
-        with open("output.txt", "w") as f:
-            f.write(result)
+    out_file = OUTPUT if OUTPUT is not None else "output"
+    # if OUTPUT:
+    with open(out_file + '.txt', "w") as f:
+        f.write(result)
+    text_image(result, WIDTH, HEIGHT, 10, out_file)
 
 if __name__ == "__main__":
     main()
